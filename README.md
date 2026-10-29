@@ -2,10 +2,10 @@
 
 ## Team Members:
 
-* 
-* 
-* 
-* 
+* Harry Phillips
+* Josh Todes
+* Bhuman Sharma
+* Owen Block
 
 ## User stories
 
