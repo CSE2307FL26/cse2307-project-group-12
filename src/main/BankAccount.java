@@ -21,9 +21,9 @@ public class BankAccount {
         if(amount > 0 && amount <= this.balance) {
             this.balance -= amount;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid withdrawal amount. Withdrawals must be positive and cannot exceed the current balance.");
         }
-        
+
     }
 
     public double getBalance() {
