@@ -23,7 +23,60 @@ public class BankAccountTest {
             testAccount.deposit(-50);
             fail();
         } catch (IllegalArgumentException e) {
-            //do nothing, test passes
+            // do nothing, test passes
         }
     }
+
+    @Test
+    public void testWithdraw() {
+
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+        testAccount.withdraw(50);
+
+        assertEquals(50, testAccount.getBalance(), 0.01);
+
+    }
+
+    @Test
+    public void testTooLargeWithdraw() {
+
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+
+        try {
+            testAccount.withdraw(150); // cannot withdraw more than the balance
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+
+    }
+
+    @Test
+    public void testNegativeWithdraw() {
+
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+
+        try {
+            testAccount.withdraw(-50); // cannot withdraw a negative amount
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+
+    }
+
+    @Test
+    public void testWithdrawToZeroBalance() {
+
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100);
+        testAccount.withdraw(100);
+
+        assertEquals(0, testAccount.getBalance(), 0.01);
+
+    }
+
 }
