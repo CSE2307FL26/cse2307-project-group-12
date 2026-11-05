@@ -29,4 +29,13 @@ public class BankAccount {
     public double getBalance() {
         return this.balance;
     }
+
+    public void chargeFee(double amount) {
+        if(amount > 0) {
+            this.balance -= amount;
+        } else {
+            throw new IllegalArgumentException("Invalid fee amount. Fee must be a positive amount");
+        }
+
+    }
 }
