@@ -47,18 +47,18 @@ public class MainMenu {
 
     public void performDeposit() {
         double depositAmount = -1;
-        while(depositAmount < 0) {
+        while(depositAmount <= 0) {
             System.out.print("How much would you like to deposit: ");
-            depositAmount = keyboardInput.nextInt();
+            depositAmount = keyboardInput.nextDouble();
         }
         userAccount.deposit(depositAmount);
     }
 
     public void performWithdrawal() {
         double withdrawAmount = -1;
-        while(withdrawAmount < 0) {
+        while(withdrawAmount <= 0) {
             System.out.print("How much would you like to withdraw: ");
-            withdrawAmount = keyboardInput.nextInt();
+            withdrawAmount = keyboardInput.nextDouble();
         }
         userAccount.withdraw(withdrawAmount);
     }
