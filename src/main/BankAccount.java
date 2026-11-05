@@ -16,7 +16,26 @@ public class BankAccount {
         }
     }
 
+    public void withdraw(double amount) {
+       
+        if(amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+        } else {
+            throw new IllegalArgumentException("Invalid withdrawal amount. Withdrawals must be positive and cannot exceed the current balance.");
+        }
+
+    }
+
     public double getBalance() {
         return this.balance;
+    }
+
+    public void chargeFee(double amount) {
+        if(amount > 0) {
+            this.balance -= amount;
+        } else {
+            throw new IllegalArgumentException("Invalid fee amount. Fee must be a positive amount");
+        }
+
     }
 }
