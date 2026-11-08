@@ -4,14 +4,17 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 3;
-	private static final int MAX_SELECTION = 3;
+    private static final int EXIT_SELECTION = 4;
+	private static final int MAX_SELECTION = 4;
 
 	private BankAccount userAccount;
+    private Bank bank;
     private Scanner keyboardInput;
 
     public MainMenu() {
         this.userAccount = new BankAccount();
+        this.bank = new Bank();
+        this.bank.addAccount("12345", userAccount);
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -21,7 +24,8 @@ public class MainMenu {
         
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a withdrawal");
-        System.out.println("3. Exit the app");
+        System.out.println("3. Close an account");
+        System.out.println("4. Exit the app");
 
     }
 
@@ -42,6 +46,9 @@ public class MainMenu {
             case 2:
                 performWithdrawal();
                 break;
+            case 3:
+                performCloseAccount();
+                break;
         }
     }
 
@@ -51,7 +58,11 @@ public class MainMenu {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
-        userAccount.deposit(depositAmount);
+        try {
+            bank.getAccount("12345").deposit(depositAmount);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Deposit failed: " + e.getMessage());
+        }
     }
 
     public void performWithdrawal() {
@@ -60,7 +71,23 @@ public class MainMenu {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
-        userAccount.withdraw(withdrawAmount);
+        try {
+            bank.getAccount("12345").withdraw(withdrawAmount);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Withdrawal failed: " + e.getMessage());
+        }
+    }
+    
+    public void performCloseAccount() {
+        System.out.print("Enter the account ID to close: ");
+        String accountId = keyboardInput.next();
+
+        try {
+            bank.closeAccount(accountId);
+            System.out.println("Account closed successfully!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not close account: " + e.getMessage());
+        }
     }
 
     public void run() {
