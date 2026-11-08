@@ -4,25 +4,26 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 3;
-	private static final int MAX_SELECTION = 3;
+    private static final int EXIT_SELECTION = 4;
+	private static final int MAX_SELECTION = 4;
 
 	private BankAccount userAccount;
+    private BankAccount secondAccount;
     private Scanner keyboardInput;
 
     public MainMenu() {
         this.userAccount = new BankAccount();
+        this.secondAccount = new BankAccount();
         this.keyboardInput = new Scanner(System.in);
     }
 
     public void displayOptions() {
-
         System.out.println("Welcome to the 237 Bank App!");
-        
+
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a withdrawal");
-        System.out.println("3. Exit the app");
-
+        System.out.println("3. Transfer money");
+        System.out.println("4. Exit the app");
     }
 
     public int getUserSelection(int max) {
@@ -41,6 +42,9 @@ public class MainMenu {
                 break;
             case 2:
                 performWithdrawal();
+                break;
+            case 3:
+                performTransfer();
                 break;
         }
     }
@@ -62,7 +66,18 @@ public class MainMenu {
         }
         userAccount.withdraw(withdrawAmount);
     }
+    public void performTransfer() {
+        System.out.print("How much would you like to transfer: ");
+        double transferAmount = keyboardInput.nextDouble();
 
+        try {
+            userAccount.transfer(secondAccount, transferAmount);
+            System.out.println("Transfer successful!");
+            System.out.println("Your new balance: $" + userAccount.getBalance());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Transfer failed: " + e.getMessage());
+        }
+    }
     public void run() {
         int selection = -1;
         while(selection != EXIT_SELECTION) {
