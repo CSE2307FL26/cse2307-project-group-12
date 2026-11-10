@@ -6,14 +6,13 @@ import java.util.Scanner;
 public class MainMenu {
 
     private Bank bank;
-    private BankAccount userAccount;
+    private String selectedAccountId;
     private Scanner keyboardInput;
     private boolean isAdmin;
 
     public MainMenu() {
         this.bank = new Bank();
-        this.userAccount = new BankAccount();
-        this.bank.addAccount("account1", this.userAccount);
+        this.bank.addAccount("account1", new BankAccount());
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -23,10 +22,12 @@ public class MainMenu {
             System.out.println("1. Collect a fee");
             System.out.println("2. Exit the app");
         } else {
+            System.out.println("Account: " + selectedAccountId);
             System.out.println("1. Make a deposit");
             System.out.println("2. Make a withdrawal");
-            System.out.println("3. Close an account");
-            System.out.println("4. Exit the app");
+            System.out.println("3. Close this account");
+            System.out.println("4. Choose another account");
+            System.out.println("5. Exit the app");
         }
 
     }
@@ -58,6 +59,9 @@ public class MainMenu {
                 case 3:
                     performCloseAccount();
                     break;
+                case 4:
+                    selectedAccountId = null;
+                    break;
             }
         }
     }
@@ -69,7 +73,7 @@ public class MainMenu {
             depositAmount = keyboardInput.nextDouble();
         }
         try {
-            BankAccount account = bank.getAccount("account1");
+            BankAccount account = bank.getAccount(selectedAccountId);
             account.deposit(depositAmount);
             System.out.printf("New balance: %.2f%n", account.getBalance());
         } catch (IllegalArgumentException e) {
@@ -84,7 +88,7 @@ public class MainMenu {
             withdrawAmount = keyboardInput.nextDouble();
         }
         try {
-            BankAccount account = bank.getAccount("account1");
+            BankAccount account = bank.getAccount(selectedAccountId);
             account.withdraw(withdrawAmount);
             System.out.printf("New balance: %.2f%n", account.getBalance());
         } catch (IllegalArgumentException e) {
@@ -92,7 +96,7 @@ public class MainMenu {
         }
     }
 
-    private BankAccount selectAccount() {
+    private String selectAccountId() {
         List<String> accountIds = bank.getAccountIds();
         if (accountIds.isEmpty()) {
             System.out.println("There are no accounts available.");
@@ -104,8 +108,12 @@ public class MainMenu {
             System.out.println((i + 1) + ". " + accountIds.get(i));
         }
         int choice = getUserSelection(accountIds.size());
-        String accountId = accountIds.get(choice - 1);
-        return bank.getAccount(accountId);
+        return accountIds.get(choice - 1);
+    }
+
+    private BankAccount selectAccount() {
+        String accountId = selectAccountId();
+        return accountId == null ? null : bank.getAccount(accountId);
     }
 
     public void performChargeFee() {
@@ -129,11 +137,9 @@ public class MainMenu {
     }
 
     public void performCloseAccount() {
-        System.out.print("Enter the account ID to close: ");
-        String accountId = keyboardInput.next();
-
         try {
-            bank.closeAccount(accountId);
+            bank.closeAccount(selectedAccountId);
+            selectedAccountId = null;
             System.out.println("Account closed successfully!");
         } catch (IllegalArgumentException e) {
             System.out.println("Could not close account: " + e.getMessage());
@@ -146,9 +152,15 @@ public class MainMenu {
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 2 : 4;
+        int exitSelection = isAdmin ? 2 : 5;
         int selection = -1;
         while (selection != exitSelection) {
+            if (!isAdmin && selectedAccountId == null) {
+                selectedAccountId = selectAccountId();
+                if (selectedAccountId == null) {
+                    return;
+                }
+            }
             displayOptions();
             selection = getUserSelection(exitSelection);
             processInput(selection);
