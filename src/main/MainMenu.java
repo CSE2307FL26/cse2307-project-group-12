@@ -65,6 +65,7 @@ public class MainMenu {
             depositAmount = keyboardInput.nextDouble();
         }
         userAccount.deposit(depositAmount);
+        System.out.printf("New balance: %.2f%n", userAccount.getBalance());
     }
 
     public void performWithdrawal() {
@@ -74,6 +75,7 @@ public class MainMenu {
             withdrawAmount = keyboardInput.nextDouble();
         }
         userAccount.withdraw(withdrawAmount);
+        System.out.printf("New balance: %.2f%n", userAccount.getBalance());
     }
 
     private BankAccount selectAccount() {
