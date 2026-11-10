@@ -1,4 +1,5 @@
 package main;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class Bank {
     }
 
     public List<String> getAccountIds() {
-    return new ArrayList<>(bankAccounts.keySet());
+        return new ArrayList<>(bankAccounts.keySet());
     }
 
 }
