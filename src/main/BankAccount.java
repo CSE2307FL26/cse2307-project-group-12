@@ -41,4 +41,13 @@ public class BankAccount {
         this.withdraw(amount);
         otherAccount.deposit(amount);
     }
+
+    public void chargeFee(double amount) {
+        if(amount > 0) {
+            this.balance -= amount;
+        } else {
+            throw new IllegalArgumentException("Invalid fee amount. Fee must be a positive amount");
+        }
+
+    }
 }
