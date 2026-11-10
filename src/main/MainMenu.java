@@ -26,8 +26,8 @@ public class MainMenu {
             System.out.println("1. Make a deposit");
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
-            System.out.println("4. Choose another account");
-            System.out.println("5. Transfer money");
+            System.out.println("4. Transfer money");
+            System.out.println("5. Choose another account");
             System.out.println("6. Exit the app");
         }
 
@@ -61,10 +61,10 @@ public class MainMenu {
                     performCloseAccount();
                     break;
                 case 4:
-                    selectedAccountId = null;
+                    performTransfer();
                     break;
                 case 5:
-                    performTransfer();
+                    selectedAccountId = null;
                     break;
             }
         }
