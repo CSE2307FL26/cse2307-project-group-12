@@ -1,37 +1,39 @@
 package main;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 4;
-	private static final int MAX_SELECTION = 4;
-
-	private BankAccount userAccount;
     private Bank bank;
+    private BankAccount userAccount;
     private Scanner keyboardInput;
+    private boolean isAdmin;
 
     public MainMenu() {
-        this.userAccount = new BankAccount();
         this.bank = new Bank();
-        this.bank.addAccount("12345", userAccount);
+        this.userAccount = new BankAccount();
+        this.bank.addAccount("account1", this.userAccount);
         this.keyboardInput = new Scanner(System.in);
     }
 
     public void displayOptions() {
 
-        System.out.println("Welcome to the 237 Bank App!");
-        
-        System.out.println("1. Make a deposit");
-        System.out.println("2. Make a withdrawal");
-        System.out.println("3. Close an account");
-        System.out.println("4. Exit the app");
+        if (isAdmin) {
+            System.out.println("1. Collect a fee");
+            System.out.println("2. Exit the app");
+        } else {
+            System.out.println("1. Make a deposit");
+            System.out.println("2. Make a withdrawal");
+            System.out.println("3. Close an account");
+            System.out.println("4. Exit the app");
+        }
 
     }
 
     public int getUserSelection(int max) {
         int selection = -1;
-        while(selection < 1 || selection > max) {
+        while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
         }
@@ -39,27 +41,37 @@ public class MainMenu {
     }
 
     public void processInput(int selection) {
-        switch (selection) {
-            case 1:
-                performDeposit();
-                break;
-            case 2:
-                performWithdrawal();
-                break;
-            case 3:
-                performCloseAccount();
-                break;
+        if (isAdmin) {
+            switch (selection) {
+                case 1:
+                    performChargeFee();
+                    break;
+            }
+        } else {
+            switch (selection) {
+                case 1:
+                    performDeposit();
+                    break;
+                case 2:
+                    performWithdrawal();
+                    break;
+                case 3:
+                    performCloseAccount();
+                    break;
+            }
         }
     }
 
     public void performDeposit() {
         double depositAmount = -1;
-        while(depositAmount < 0) {
+        while (depositAmount <= 0) {
             System.out.print("How much would you like to deposit: ");
-            depositAmount = keyboardInput.nextInt();
+            depositAmount = keyboardInput.nextDouble();
         }
         try {
-            bank.getAccount("12345").deposit(depositAmount);
+            BankAccount account = bank.getAccount("account1");
+            account.deposit(depositAmount);
+            System.out.printf("New balance: %.2f%n", account.getBalance());
         } catch (IllegalArgumentException e) {
             System.out.println("Deposit failed: " + e.getMessage());
         }
@@ -67,17 +79,55 @@ public class MainMenu {
 
     public void performWithdrawal() {
         double withdrawAmount = -1;
-        while(withdrawAmount < 0) {
+        while (withdrawAmount <= 0) {
             System.out.print("How much would you like to withdraw: ");
-            withdrawAmount = keyboardInput.nextInt();
+            withdrawAmount = keyboardInput.nextDouble();
         }
         try {
-            bank.getAccount("12345").withdraw(withdrawAmount);
+            BankAccount account = bank.getAccount("account1");
+            account.withdraw(withdrawAmount);
+            System.out.printf("New balance: %.2f%n", account.getBalance());
         } catch (IllegalArgumentException e) {
             System.out.println("Withdrawal failed: " + e.getMessage());
         }
     }
-    
+
+    private BankAccount selectAccount() {
+        List<String> accountIds = bank.getAccountIds();
+        if (accountIds.isEmpty()) {
+            System.out.println("There are no accounts available.");
+            return null;
+        }
+
+        System.out.println("Select an account:");
+        for (int i = 0; i < accountIds.size(); i++) {
+            System.out.println((i + 1) + ". " + accountIds.get(i));
+        }
+        int choice = getUserSelection(accountIds.size());
+        String accountId = accountIds.get(choice - 1);
+        return bank.getAccount(accountId);
+    }
+
+    public void performChargeFee() {
+        BankAccount account = selectAccount();
+        if (account == null) {
+            return;
+        }
+        System.out.print("Enter the fee amount: ");
+        if (!keyboardInput.hasNextDouble()) {
+            keyboardInput.next();
+            System.out.println("Please enter a number.");
+            return;
+        }
+        try {
+            double fee = keyboardInput.nextDouble();
+            account.chargeFee(fee);
+            System.out.printf("New balance: %.2f%n", account.getBalance());
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void performCloseAccount() {
         System.out.print("Enter the account ID to close: ");
         String accountId = keyboardInput.next();
@@ -91,10 +141,16 @@ public class MainMenu {
     }
 
     public void run() {
+        System.out.println("Welcome to the 237 Bank App!");
+        System.out.println("1. Client");
+        System.out.println("2. Administrator");
+        this.isAdmin = getUserSelection(2) == 2;
+
+        int exitSelection = isAdmin ? 2 : 4;
         int selection = -1;
-        while(selection != EXIT_SELECTION) {
+        while (selection != exitSelection) {
             displayOptions();
-            selection = getUserSelection(MAX_SELECTION);
+            selection = getUserSelection(exitSelection);
             processInput(selection);
         }
     }

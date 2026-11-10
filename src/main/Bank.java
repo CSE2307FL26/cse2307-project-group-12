@@ -1,5 +1,8 @@
 package main;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Bank {
@@ -34,6 +37,10 @@ public class Bank {
         }
 
         return account;
+    }
+
+    public List<String> getAccountIds() {
+        return new ArrayList<>(bankAccounts.keySet());
     }
 
     public void closeAccount(String accountId) {
