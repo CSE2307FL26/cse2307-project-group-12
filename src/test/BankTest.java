@@ -98,4 +98,49 @@ public class BankTest {
 
         assertSame(originalAccount, bank.getAccount("12345"));
     }
+
+    @Test
+    public void testCloseAccount() {
+        Bank bank = new Bank();
+        bank.addAccount("12345", new BankAccount());
+
+        bank.closeAccount("12345");
+
+        try {
+            bank.getAccount("12345");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testCloseNonexistentAccount() {
+        Bank bank = new Bank();
+
+        try {
+            bank.closeAccount("12345");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testCloseAccountWithBalance() {
+        Bank bank = new Bank();
+        BankAccount account = new BankAccount();
+
+        account.deposit(100);
+        bank.addAccount("12345", account);
+
+        try {
+            bank.closeAccount("12345");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, bank.getAccount("12345").getBalance(), 0.01);
+    }
 }

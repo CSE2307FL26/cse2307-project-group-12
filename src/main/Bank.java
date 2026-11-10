@@ -43,4 +43,13 @@ public class Bank {
         return new ArrayList<>(bankAccounts.keySet());
     }
 
+    public void closeAccount(String accountId) {
+        BankAccount account = getAccount(accountId);
+
+        if (account.getBalance() != 0) {
+            throw new IllegalArgumentException("Account must have a zero balance to close.");
+        }
+
+        bankAccounts.remove(accountId);
+    }
 }
