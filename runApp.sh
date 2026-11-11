@@ -1,4 +1,3 @@
 #!/bin/bash
 
-javac -d . src/main/*.java
-java main.MainMenu
+javac -d . src/main/*.java && java main.MainMenu
