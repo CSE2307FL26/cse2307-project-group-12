@@ -20,7 +20,8 @@ public class MainMenu {
 
         if (isAdmin) {
             System.out.println("1. Collect a fee");
-            System.out.println("2. Exit the app");
+            System.out.println("2. Add an interest payment");
+            System.out.println("3. Exit the app");
         } else {
             System.out.println("Account: " + selectedAccountId);
             System.out.println("1. Make a deposit");
@@ -47,6 +48,9 @@ public class MainMenu {
             switch (selection) {
                 case 1:
                     performChargeFee();
+                    break;
+                case 2:
+                    performInterestPayment();
                     break;
             }
         } else {
@@ -167,6 +171,26 @@ public class MainMenu {
         }
     }
 
+    public void performInterestPayment() {
+        BankAccount account = selectAccount();
+        if (account == null) {
+            return;
+        }
+        System.out.print("Enter the interest payment amount: ");
+        if (!keyboardInput.hasNextDouble()) {
+            keyboardInput.next();
+            System.out.println("Please enter a number.");
+            return;
+        }
+        try {
+            double amount = keyboardInput.nextDouble();
+            account.interestPayment(amount);
+            System.out.printf("New balance: %.2f%n", account.getBalance());
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void performCloseAccount() {
         try {
             bank.closeAccount(selectedAccountId);
@@ -183,7 +207,7 @@ public class MainMenu {
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 2 : 6;
+        int exitSelection = isAdmin ? 3 : 6;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
