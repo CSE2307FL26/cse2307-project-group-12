@@ -145,6 +145,21 @@ public class BankAccountTest {
         assertEquals(100, account1.getBalance(), 0.01);
     }
 
+@Test
+    public void testInvalidTransferAccount() {
+        BankAccount account1 = new BankAccount();
+        account1.deposit(100);
+
+        try {
+            account1.transfer(account1, 50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, account1.getBalance(), 0.01);
+    }
+    
     @Test
     public void testChargeFeeReducesBalance() {
         BankAccount account = new BankAccount();
