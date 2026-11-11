@@ -26,8 +26,9 @@ public class MainMenu {
             System.out.println("1. Make a deposit");
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
-            System.out.println("4. Choose another account");
-            System.out.println("5. Exit the app");
+            System.out.println("4. View transaction history");
+            System.out.println("5. Choose another account");
+            System.out.println("6. Exit the app");
         }
 
     }
@@ -60,6 +61,9 @@ public class MainMenu {
                     performCloseAccount();
                     break;
                 case 4:
+                    performViewTransactionHistory();
+                    break;
+                case 5:
                     selectedAccountId = null;
                     break;
             }
@@ -146,13 +150,29 @@ public class MainMenu {
         }
     }
 
+    public void performViewTransactionHistory() {
+        try {
+            List<String> history = bank.getAccount(selectedAccountId).getTransactionHistory();
+            if (history.isEmpty()) {
+                System.out.println("No transactions yet for " + selectedAccountId + ".");
+                return;
+            }
+            System.out.println("Transaction history for " + selectedAccountId + ":");
+            for (int i = 0; i < history.size(); i++) {
+                System.out.println((i + 1) + ". " + history.get(i));
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not load transaction history: " + e.getMessage());
+        }
+    }
+
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
         System.out.println("1. Client");
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 2 : 5;
+        int exitSelection = isAdmin ? 2 : 6;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
