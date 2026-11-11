@@ -220,4 +220,45 @@ public class BankAccountTest {
         assertEquals(100, account.getBalance(), 0.01);
     }
 
+    @Test
+    public void testInterestPaymentIncreasesBalance() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        account.interestPayment(2.50);
+
+        assertEquals(102.50, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsZeroAmount() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        try {
+            account.interestPayment(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+        
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsNegativeAmount() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        try {
+            account.interestPayment(-10);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+
 }

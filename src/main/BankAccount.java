@@ -50,4 +50,12 @@ public class BankAccount {
         }
 
     }
+
+    public void interestPayment(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+        } else {
+            throw new IllegalArgumentException("Interest payment must be positive.");
+        }
+    }
 }
