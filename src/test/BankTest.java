@@ -6,6 +6,8 @@ import main.Bank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -142,5 +144,48 @@ public class BankTest {
         }
 
         assertEquals(100, bank.getAccount("12345").getBalance(), 0.01);
+    }
+        @Test
+    public void testCreateAccountAddsAccountToBank() {
+        Bank bank = new Bank();
+
+        String accountId = bank.createAccount();
+
+        assertTrue(bank.getAccountIds().contains(accountId));
+        assertEquals(0, bank.getAccount(accountId).getBalance(), 0.01);
+    }
+
+    @Test
+    public void testCreateAccountGivesUniqueIds() {
+        Bank bank = new Bank();
+
+        String firstId = bank.createAccount();
+        String secondId = bank.createAccount();
+
+        assertNotEquals(firstId, secondId);
+        assertEquals(2, bank.getAccountIds().size());
+    }
+
+    @Test
+    public void testCreateAccountSkipsExistingId() {
+        Bank bank = new Bank();
+        BankAccount existingAccount = new BankAccount();
+        bank.addAccount("account1", existingAccount);
+
+        String newId = bank.createAccount();
+
+        assertNotEquals("account1", newId);
+        assertSame(existingAccount, bank.getAccount("account1"));
+    }
+
+    @Test
+    public void testCreateAccountDoesNotReuseClosedId() {
+        Bank bank = new Bank();
+        String firstId = bank.createAccount();
+        bank.closeAccount(firstId);
+
+        String secondId = bank.createAccount();
+
+        assertNotEquals(firstId, secondId);
     }
 }
