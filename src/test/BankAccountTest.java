@@ -146,7 +146,7 @@ public class BankAccountTest {
     }
 
 @Test
-    public void testInvalidTransferAccount() {
+    public void testTransferToSameAccount() {
         BankAccount account1 = new BankAccount();
         account1.deposit(100);
 
