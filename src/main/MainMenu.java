@@ -27,8 +27,9 @@ public class MainMenu {
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
             System.out.println("4. View transaction history");
-            System.out.println("5. Choose another account");
-            System.out.println("6. Exit the app");
+            System.out.println("5. Open a new account");
+            System.out.println("6. Choose another account");
+            System.out.println("7. Exit the app");
         }
 
     }
@@ -64,6 +65,9 @@ public class MainMenu {
                     performViewTransactionHistory();
                     break;
                 case 5:
+                    performCreateAccount();
+                    break;
+                case 6:
                     selectedAccountId = null;
                     break;
             }
@@ -166,13 +170,23 @@ public class MainMenu {
         }
     }
 
+    public void performCreateAccount() {
+        try {
+            String newAccountId = bank.createAccount();
+            System.out.println("New account created: " + newAccountId);
+            System.out.println("Use \"Choose another account\" to switch to it.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not create account: " + e.getMessage());
+        }
+    }
+
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
         System.out.println("1. Client");
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 2 : 6;
+        int exitSelection = isAdmin ? 2 : 7;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
