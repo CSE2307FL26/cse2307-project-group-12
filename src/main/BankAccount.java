@@ -60,12 +60,26 @@ public class BankAccount {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    public void interestPayment(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            recordTransaction("Interest", amount);
+        } else {
+            throw new IllegalArgumentException("Interest payment must be positive.");
+        }
+    }
+
+    // Returns a copy so the history can only be changed through transactions on the account
+>>>>>>> origin/development
     public List<String> getTransactionHistory() {
         return new ArrayList<>(this.transactionHistory);
     }
 
     private void recordTransaction(String type, double amount) {
         this.transactionHistory.add(String.format("%s: %.2f | Balance: %.2f", type, amount, this.balance));
+<<<<<<< HEAD
 =======
     public void interestPayment(double amount) {
         if (amount > 0) {
@@ -73,6 +87,8 @@ public class BankAccount {
         } else {
             throw new IllegalArgumentException("Interest payment must be positive.");
         }
+>>>>>>> origin/development
+=======
 >>>>>>> origin/development
     }
 }

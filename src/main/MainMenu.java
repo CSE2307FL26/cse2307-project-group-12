@@ -28,6 +28,7 @@ public class MainMenu {
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
 <<<<<<< HEAD
+<<<<<<< HEAD
             System.out.println("4. View transaction history");
             System.out.println("5. Open a new account");
             System.out.println("6. Choose another account");
@@ -36,6 +37,12 @@ public class MainMenu {
             System.out.println("4. Transfer money");
             System.out.println("5. Choose another account");
             System.out.println("6. Exit the app");
+>>>>>>> origin/development
+=======
+            System.out.println("4. Transfer money");
+            System.out.println("5. View transaction history");
+            System.out.println("6. Choose another account");
+            System.out.println("7. Exit the app");
 >>>>>>> origin/development
         }
 
@@ -73,6 +80,7 @@ public class MainMenu {
                     break;
                 case 4:
 <<<<<<< HEAD
+<<<<<<< HEAD
                     performViewTransactionHistory();
                     break;
                 case 5:
@@ -83,6 +91,14 @@ public class MainMenu {
                     performTransfer();
                     break;
                 case 5:
+>>>>>>> origin/development
+=======
+                    performTransfer();
+                    break;
+                case 5:
+                    performViewTransactionHistory();
+                    break;
+                case 6:
 >>>>>>> origin/development
                     selectedAccountId = null;
                     break;
@@ -250,9 +266,13 @@ public class MainMenu {
         this.isAdmin = getUserSelection(2) == 2;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         int exitSelection = isAdmin ? 2 : 7;
 =======
         int exitSelection = isAdmin ? 3 : 6;
+>>>>>>> origin/development
+=======
+        int exitSelection = isAdmin ? 3 : 7;
 >>>>>>> origin/development
         int selection = -1;
         while (selection != exitSelection) {
