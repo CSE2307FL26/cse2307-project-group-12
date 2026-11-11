@@ -267,6 +267,10 @@ public class BankAccountTest {
     public void testNewAccountHasEmptyHistory() {
         BankAccount account = new BankAccount();
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/development
         assertTrue(account.getTransactionHistory().isEmpty());
     }
 
@@ -312,16 +316,60 @@ public class BankAccountTest {
 
     @Test
     public void testInvalidTransactionsAreNotRecorded() {
+<<<<<<< HEAD
+=======
+    @Test
+    public void testInterestPaymentIncreasesBalance() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        account.interestPayment(2.50);
+
+        assertEquals(102.50, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsZeroAmount() {
+>>>>>>> origin/development
+=======
+>>>>>>> origin/development
         BankAccount account = new BankAccount();
         account.deposit(100);
 
         try {
+<<<<<<< HEAD
+<<<<<<< HEAD
             account.withdraw(500);
+=======
+            account.interestPayment(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+        
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsNegativeAmount() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        try {
+            account.interestPayment(-10);
+>>>>>>> origin/development
+=======
+            account.withdraw(500);
+>>>>>>> origin/development
             fail();
         } catch (IllegalArgumentException e) {
             // Expected exception.
         }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/development
         try {
             account.deposit(-20);
             fail();
@@ -341,4 +389,14 @@ public class BankAccountTest {
 
         assertEquals(1, account.getTransactionHistory().size());
     }
+<<<<<<< HEAD
+=======
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+
+>>>>>>> origin/development
 }
+=======
+}
+>>>>>>> origin/development
