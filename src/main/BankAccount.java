@@ -17,17 +17,29 @@ public class BankAccount {
     }
 
     public void withdraw(double amount) {
-       
         if(amount > 0 && amount <= this.balance) {
             this.balance -= amount;
         } else {
             throw new IllegalArgumentException("Invalid withdrawal amount. Withdrawals must be positive and cannot exceed the current balance.");
         }
-
     }
 
     public double getBalance() {
         return this.balance;
+    }
+
+    // Transfer money to another account
+    public void transfer(BankAccount otherAccount, double amount) {
+        if (otherAccount == null) {
+            throw new IllegalArgumentException("Account does not exist.");
+        }
+
+        if (otherAccount == this) {
+            throw new IllegalArgumentException("Cannot transfer to the same account.");
+        }
+
+        this.withdraw(amount);
+        otherAccount.deposit(amount);
     }
 
     public void chargeFee(double amount) {

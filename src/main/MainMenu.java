@@ -26,8 +26,9 @@ public class MainMenu {
             System.out.println("1. Make a deposit");
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
-            System.out.println("4. Choose another account");
-            System.out.println("5. Exit the app");
+            System.out.println("4. Transfer money");
+            System.out.println("5. Choose another account");
+            System.out.println("6. Exit the app");
         }
 
     }
@@ -60,6 +61,9 @@ public class MainMenu {
                     performCloseAccount();
                     break;
                 case 4:
+                    performTransfer();
+                    break;
+                case 5:
                     selectedAccountId = null;
                     break;
             }
@@ -96,14 +100,41 @@ public class MainMenu {
         }
     }
 
-    private String selectAccountId() {
+    public void performTransfer() {
+        String destinationId = selectAccountId(selectedAccountId);
+        if (destinationId == null) {
+            return;
+        }
+        System.out.print("How much would you like to transfer: ");
+        if (!keyboardInput.hasNextDouble()) {
+            keyboardInput.next();
+            System.out.println("Please enter a number.");
+            return;
+        }
+        try {
+            BankAccount source = bank.getAccount(selectedAccountId);
+            source.transfer(bank.getAccount(destinationId), keyboardInput.nextDouble());
+            System.out.printf("Transfer successful! New balance: %.2f%n", source.getBalance());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Transfer failed: " + e.getMessage());
+        }
+    }
+
+    private String selectAccountId(String excludedAccountId) {
         List<String> accountIds = bank.getAccountIds();
+        String prompt = "Select an account:";
+        String emptyMessage = "There are no accounts available.";
+        if (excludedAccountId != null) {
+            accountIds.remove(excludedAccountId);
+            prompt = "Select the account to transfer to:";
+            emptyMessage = "You need another account to transfer to.";
+        }
         if (accountIds.isEmpty()) {
-            System.out.println("There are no accounts available.");
+            System.out.println(emptyMessage);
             return null;
         }
 
-        System.out.println("Select an account:");
+        System.out.println(prompt);
         for (int i = 0; i < accountIds.size(); i++) {
             System.out.println((i + 1) + ". " + accountIds.get(i));
         }
@@ -112,7 +143,7 @@ public class MainMenu {
     }
 
     private BankAccount selectAccount() {
-        String accountId = selectAccountId();
+        String accountId = selectAccountId(null);
         return accountId == null ? null : bank.getAccount(accountId);
     }
 
@@ -152,11 +183,11 @@ public class MainMenu {
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 2 : 5;
+        int exitSelection = isAdmin ? 2 : 6;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
-                selectedAccountId = selectAccountId();
+                selectedAccountId = selectAccountId(null);
                 if (selectedAccountId == null) {
                     return;
                 }
