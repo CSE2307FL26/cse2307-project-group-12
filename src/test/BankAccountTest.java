@@ -83,6 +83,87 @@ public class BankAccountTest {
     }
 
     @Test
+    public void testTransfer() {
+       
+        BankAccount account1 = new BankAccount();
+        BankAccount account2 = new BankAccount();
+
+        account1.deposit(100);
+        account2.deposit(50);
+
+        account1.transfer(account2, 30);
+
+        assertEquals(70, account1.getBalance(), 0.01);
+        assertEquals(80, account2.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testTooLargeTransfer() {
+        BankAccount account1 = new BankAccount();
+        BankAccount account2 = new BankAccount();
+
+        account1.deposit(100);
+
+        try {
+            account1.transfer(account2, 150);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, account1.getBalance(), 0.01);
+        assertEquals(0, account2.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testNegativeTransfer() {
+        BankAccount account1 = new BankAccount();
+        BankAccount account2 = new BankAccount();
+
+        account1.deposit(100);
+
+        try {
+            account1.transfer(account2, -50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, account1.getBalance(), 0.01);
+        assertEquals(0, account2.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInvalidTransferAccount() {
+        BankAccount account1 = new BankAccount();
+        account1.deposit(100);
+
+        try {
+            account1.transfer(null, 50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, account1.getBalance(), 0.01);
+    }
+
+@Test
+    public void testTransferToSameAccount() {
+        BankAccount account1 = new BankAccount();
+        account1.deposit(100);
+
+        try {
+            account1.transfer(account1, 50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(100, account1.getBalance(), 0.01);
+    }
+    
+    @Test
     public void testChargeFeeReducesBalance() {
         BankAccount account = new BankAccount();
         account.deposit(100);
@@ -145,6 +226,7 @@ public class BankAccountTest {
     public void testNewAccountHasEmptyHistory() {
         BankAccount account = new BankAccount();
 
+<<<<<<< HEAD
         assertTrue(account.getTransactionHistory().isEmpty());
     }
 
@@ -176,16 +258,50 @@ public class BankAccountTest {
 
     @Test
     public void testInvalidTransactionsAreNotRecorded() {
+=======
+    @Test
+    public void testInterestPaymentIncreasesBalance() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        account.interestPayment(2.50);
+
+        assertEquals(102.50, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsZeroAmount() {
+>>>>>>> origin/development
         BankAccount account = new BankAccount();
         account.deposit(100);
 
         try {
+<<<<<<< HEAD
             account.withdraw(500);
+=======
+            account.interestPayment(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+        
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInterestPaymentRejectsNegativeAmount() {
+        BankAccount account = new BankAccount();
+        account.deposit(100);
+
+        try {
+            account.interestPayment(-10);
+>>>>>>> origin/development
             fail();
         } catch (IllegalArgumentException e) {
             // Expected exception.
         }
 
+<<<<<<< HEAD
         try {
             account.deposit(-20);
             fail();
@@ -205,4 +321,10 @@ public class BankAccountTest {
 
         assertEquals(1, account.getTransactionHistory().size());
     }
+=======
+        assertEquals(100, account.getBalance(), 0.01);
+    }
+
+
+>>>>>>> origin/development
 }
