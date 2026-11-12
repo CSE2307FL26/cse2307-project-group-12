@@ -21,6 +21,7 @@ public class MainMenu {
         if (isAdmin) {
             System.out.println("1. Collect a fee");
             System.out.println("2. Add an interest payment");
+
             System.out.println("3. Exit the app");
         } else {
             System.out.println("Account: " + selectedAccountId);
@@ -28,9 +29,11 @@ public class MainMenu {
             System.out.println("2. Make a withdrawal");
             System.out.println("3. Close this account");
             System.out.println("4. Transfer money");
-            System.out.println("5. Open a new account");
-            System.out.println("6. Choose another account");
-            System.out.println("7. Exit the app");
+            System.out.println("5. View transaction history");
+            System.out.println("6. Check your balance");
+            System.out.println("7. Open a new account");
+            System.out.println("8. Choose another account");
+            System.out.println("9. Exit the app");
         }
 
     }
@@ -43,7 +46,7 @@ public class MainMenu {
         }
         return selection;
     }
-
+    
     public void processInput(int selection) {
         if (isAdmin) {
             switch (selection) {
@@ -69,13 +72,24 @@ public class MainMenu {
                     performTransfer();
                     break;
                 case 5:
-                    performCreateAccount();
+                    performViewTransactionHistory();
                     break;
                 case 6:
+                    performCheckBalance();
+                    break;
+                case 7:
+                    performCreateAccount();
+                    break;
+                case 8:
                     selectedAccountId = null;
                     break;
             }
         }
+    }
+
+    public void performCheckBalance() {
+        BankAccount account = bank.getAccount(selectedAccountId);
+        System.out.printf("Current balance: %.2f%n", account.getBalance());
     }
 
     public void performDeposit() {
@@ -205,6 +219,22 @@ public class MainMenu {
         }
     }
 
+    public void performViewTransactionHistory() {
+        try {
+            List<String> history = bank.getAccount(selectedAccountId).getTransactionHistory();
+            if (history.isEmpty()) {
+                System.out.println("No transactions yet for " + selectedAccountId + ".");
+                return;
+            }
+            System.out.println("Transaction history for " + selectedAccountId + ":");
+            for (int i = 0; i < history.size(); i++) {
+                System.out.println((i + 1) + ". " + history.get(i));
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not load transaction history: " + e.getMessage());
+        }
+    }
+
     public void performCreateAccount() {
         try {
             String newAccountId = bank.createAccount();
@@ -234,7 +264,7 @@ public class MainMenu {
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 3 : 7;
+        int exitSelection = isAdmin ? 3 : 9;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
