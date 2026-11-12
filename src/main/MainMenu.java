@@ -42,7 +42,12 @@ public class MainMenu {
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
-            selection = keyboardInput.nextInt();
+            if (keyboardInput.hasNextInt()) {
+                selection = keyboardInput.nextInt();
+            } else {
+                keyboardInput.next();
+                System.out.println("Please enter a whole number.");
+            }
         }
         return selection;
     }
@@ -92,10 +97,22 @@ public class MainMenu {
         System.out.printf("Current balance: %.2f%n", account.getBalance());
     }
 
+    private boolean hasNumericAmount(String action) {
+        System.out.print("Please enter the amount to " + action + ": ");
+        if (keyboardInput.hasNextDouble()) {
+            return true;
+        }
+        keyboardInput.next();
+        System.out.println("Invalid amount. Expected a number.");
+        return false;
+    }
+
     public void performDeposit() {
         double depositAmount = -1;
         while (depositAmount <= 0) {
-            System.out.print("How much would you like to deposit: ");
+            if (!hasNumericAmount("deposit")) {
+                return;
+            }
             depositAmount = keyboardInput.nextDouble();
         }
         try {
@@ -110,7 +127,9 @@ public class MainMenu {
     public void performWithdrawal() {
         double withdrawAmount = -1;
         while (withdrawAmount <= 0) {
-            System.out.print("How much would you like to withdraw: ");
+            if (!hasNumericAmount("withdraw")) {
+                return;
+            }
             withdrawAmount = keyboardInput.nextDouble();
         }
         try {
@@ -127,10 +146,7 @@ public class MainMenu {
         if (destinationId == null) {
             return;
         }
-        System.out.print("How much would you like to transfer: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("transfer")) {
             return;
         }
         try {
@@ -174,10 +190,7 @@ public class MainMenu {
         if (account == null) {
             return;
         }
-        System.out.print("Enter the fee amount: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("charge as a fee")) {
             return;
         }
         try {
@@ -194,10 +207,7 @@ public class MainMenu {
         if (account == null) {
             return;
         }
-        System.out.print("Enter the interest payment amount: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("pay as interest")) {
             return;
         }
         try {
