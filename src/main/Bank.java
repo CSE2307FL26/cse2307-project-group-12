@@ -16,10 +16,6 @@ public class Bank {
     }
 
     public void addAccount(String accountId, BankAccount account) {
-        if (accountId == null || accountId.isEmpty()) {
-            throw new IllegalArgumentException("Account ID cannot be empty.");
-        }
-
         if (account == null) {
             throw new IllegalArgumentException("Account cannot be null.");
         }

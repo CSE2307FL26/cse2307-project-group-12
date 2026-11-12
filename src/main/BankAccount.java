@@ -15,6 +15,10 @@ public class BankAccount {
     }
 
     void assignAccountId(String accountId) {
+        if (accountId == null || accountId.isEmpty()) {
+            throw new IllegalArgumentException("Account ID cannot be empty.");
+        }
+
         if (this.accountId != null && !this.accountId.equals(accountId)) {
             throw new IllegalArgumentException("Account already has a different ID.");
         }
