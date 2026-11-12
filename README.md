@@ -19,6 +19,20 @@
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
 
+## What user stories were completed this iteration?
+
+The following user stories were completed during Iteration 1:
+
+1. A bank customer should be able to deposit into an existing account. (Starter functionality provided by Professor Shook)
+2. A bank customer should be able to withdraw from an account.
+3. A bank customer should be able to check their account balance for any account that they currently have.
+4. A bank customer should be able to view their transaction history for an account.
+5. A bank customer should be able to create an additional account with the bank.
+6. A bank customer should be able to close an existing account.
+7. A bank customer should be able to transfer money from one account to another.
+8. A bank administrator should be able to collect fees from existing accounts when necessary.
+9. A bank administrator should be able to add an interest payment to an existing account when necessary.
+
 ## What user stories do you intend to complete next iteration?
 We want to extend functionality for our bank from one client and one administrator to being able to handle multiple clients. The user stories we thought would help us achieve this are:
 
