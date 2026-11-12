@@ -12,7 +12,7 @@ public class MainMenu {
 
     public MainMenu() {
         this.bank = new Bank();
-        this.bank.addAccount("account1", new BankAccount());
+        this.bank.createAccount();
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -215,6 +215,19 @@ public class MainMenu {
         }
     }
 
+    private String selectOrCreateAccountId() {
+        String accountId = selectAccountId(null);
+        if (accountId != null) {
+            return accountId;
+        }
+        System.out.println("1. Open a new account");
+        System.out.println("2. Exit the app");
+        if (getUserSelection(2) == 1) {
+            return bank.createAccount();
+        }
+        return null;
+    }
+
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
         System.out.println("1. Client");
@@ -225,7 +238,7 @@ public class MainMenu {
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
-                selectedAccountId = selectAccountId(null);
+                selectedAccountId = selectOrCreateAccountId();
                 if (selectedAccountId == null) {
                     return;
                 }
