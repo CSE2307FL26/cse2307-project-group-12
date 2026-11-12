@@ -21,6 +21,7 @@ public class MainMenu {
         if (isAdmin) {
             System.out.println("1. Collect a fee");
             System.out.println("2. Add an interest payment");
+
             System.out.println("3. Exit the app");
         } else {
             System.out.println("Account: " + selectedAccountId);
@@ -29,7 +30,8 @@ public class MainMenu {
             System.out.println("3. Close this account");
             System.out.println("4. Transfer money");
             System.out.println("5. Choose another account");
-            System.out.println("6. Exit the app");
+            System.out.println("6. Check your balance");
+            System.out.println("7. Exit the app");
         }
 
     }
@@ -42,7 +44,7 @@ public class MainMenu {
         }
         return selection;
     }
-
+    
     public void processInput(int selection) {
         if (isAdmin) {
             switch (selection) {
@@ -70,8 +72,16 @@ public class MainMenu {
                 case 5:
                     selectedAccountId = null;
                     break;
+                case 6:
+                    performCheckBalance();
+                    break;
             }
         }
+    }
+
+    public void performCheckBalance() {
+        BankAccount account = bank.getAccount(selectedAccountId);
+        System.out.printf("Current balance: %.2f%n", account.getBalance());
     }
 
     public void performDeposit() {
@@ -207,7 +217,7 @@ public class MainMenu {
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 3 : 6;
+        int exitSelection = isAdmin ? 3 : 7;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
