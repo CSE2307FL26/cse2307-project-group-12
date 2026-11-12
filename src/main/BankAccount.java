@@ -14,18 +14,26 @@ public class BankAccount {
     }
 
     public void deposit(double amount) {
+        deposit(amount, "Deposit");
+    }
+
+    private void deposit(double amount, String transactionType) {
         if(amount > 0) {
             this.balance += amount;
-            recordTransaction("Deposit", amount);
+            recordTransaction(transactionType, amount);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
     public void withdraw(double amount) {
+        withdraw(amount, "Withdrawal");
+    }
+
+    private void withdraw(double amount, String transactionType) {
         if(amount > 0 && amount <= this.balance) {
             this.balance -= amount;
-            recordTransaction("Withdrawal", amount);
+            recordTransaction(transactionType, amount);
         } else {
             throw new IllegalArgumentException("Invalid withdrawal amount. Withdrawals must be positive and cannot exceed the current balance.");
         }
@@ -45,8 +53,8 @@ public class BankAccount {
             throw new IllegalArgumentException("Cannot transfer to the same account.");
         }
 
-        this.withdraw(amount);
-        otherAccount.deposit(amount);
+        this.withdraw(amount, "Transfer out");
+        otherAccount.deposit(amount, "Transfer in");
     }
 
     public void chargeFee(double amount) {

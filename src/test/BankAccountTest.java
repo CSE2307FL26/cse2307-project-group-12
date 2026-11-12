@@ -306,8 +306,12 @@ public class BankAccountTest {
 
         source.transfer(destination, 40);
 
-        assertEquals("Withdrawal: 40.00 | Balance: 60.00", source.getTransactionHistory().get(1));
-        assertEquals("Deposit: 40.00 | Balance: 40.00", destination.getTransactionHistory().get(0));
+        List<String> sourceHistory = source.getTransactionHistory();
+        List<String> destinationHistory = destination.getTransactionHistory();
+        assertEquals(2, sourceHistory.size());
+        assertEquals("Transfer out: 40.00 | Balance: 60.00", sourceHistory.get(1));
+        assertEquals(1, destinationHistory.size());
+        assertEquals("Transfer in: 40.00 | Balance: 40.00", destinationHistory.get(0));
     }
 
     @Test
