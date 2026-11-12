@@ -188,4 +188,19 @@ public class BankTest {
 
         assertNotEquals(firstId, secondId);
     }
+
+    @Test
+    public void testTransferHistoryIdentifiesTheOtherAccount() {
+        Bank bank = new Bank();
+        String sourceId = bank.createAccount();
+        String destinationId = bank.createAccount();
+        BankAccount source = bank.getAccount(sourceId);
+        BankAccount destination = bank.getAccount(destinationId);
+        source.deposit(100);
+
+        source.transfer(destination, 40);
+
+        assertEquals("Transfer to " + destinationId + ": 40.00 | Balance: 60.00", source.getTransactionHistory().get(1));
+        assertEquals("Transfer from " + sourceId + ": 40.00 | Balance: 40.00", destination.getTransactionHistory().get(0));
+    }
 }

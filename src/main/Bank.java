@@ -28,6 +28,7 @@ public class Bank {
             throw new IllegalArgumentException("Account ID already exists.");
         }
 
+        account.assignAccountId(accountId);
         bankAccounts.put(accountId, account);
     }
 
