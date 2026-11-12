@@ -12,7 +12,7 @@ public class MainMenu {
 
     public MainMenu() {
         this.bank = new Bank();
-        this.bank.addAccount("account1", new BankAccount());
+        this.bank.createAccount();
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -31,8 +31,9 @@ public class MainMenu {
             System.out.println("4. Transfer money");
             System.out.println("5. View transaction history");
             System.out.println("6. Check your balance");
-            System.out.println("7. Choose another account");
-            System.out.println("8. Exit the app");
+            System.out.println("7. Open a new account");
+            System.out.println("8. Choose another account");
+            System.out.println("9. Exit the app");
         }
 
     }
@@ -41,7 +42,12 @@ public class MainMenu {
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
-            selection = keyboardInput.nextInt();
+            if (keyboardInput.hasNextInt()) {
+                selection = keyboardInput.nextInt();
+            } else {
+                keyboardInput.next();
+                System.out.println("Please enter a whole number.");
+            }
         }
         return selection;
     }
@@ -77,6 +83,9 @@ public class MainMenu {
                     performCheckBalance();
                     break;
                 case 7:
+                    performCreateAccount();
+                    break;
+                case 8:
                     selectedAccountId = null;
                     break;
             }
@@ -88,10 +97,22 @@ public class MainMenu {
         System.out.printf("Current balance: %.2f%n", account.getBalance());
     }
 
+    private boolean hasNumericAmount(String action) {
+        System.out.print("Please enter the amount to " + action + ": ");
+        if (keyboardInput.hasNextDouble()) {
+            return true;
+        }
+        keyboardInput.next();
+        System.out.println("Invalid amount. Expected a number.");
+        return false;
+    }
+
     public void performDeposit() {
         double depositAmount = -1;
         while (depositAmount <= 0) {
-            System.out.print("How much would you like to deposit: ");
+            if (!hasNumericAmount("deposit")) {
+                return;
+            }
             depositAmount = keyboardInput.nextDouble();
         }
         try {
@@ -106,7 +127,9 @@ public class MainMenu {
     public void performWithdrawal() {
         double withdrawAmount = -1;
         while (withdrawAmount <= 0) {
-            System.out.print("How much would you like to withdraw: ");
+            if (!hasNumericAmount("withdraw")) {
+                return;
+            }
             withdrawAmount = keyboardInput.nextDouble();
         }
         try {
@@ -123,10 +146,7 @@ public class MainMenu {
         if (destinationId == null) {
             return;
         }
-        System.out.print("How much would you like to transfer: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("transfer")) {
             return;
         }
         try {
@@ -170,10 +190,7 @@ public class MainMenu {
         if (account == null) {
             return;
         }
-        System.out.print("Enter the fee amount: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("charge as a fee")) {
             return;
         }
         try {
@@ -190,10 +207,7 @@ public class MainMenu {
         if (account == null) {
             return;
         }
-        System.out.print("Enter the interest payment amount: ");
-        if (!keyboardInput.hasNextDouble()) {
-            keyboardInput.next();
-            System.out.println("Please enter a number.");
+        if (!hasNumericAmount("pay as interest")) {
             return;
         }
         try {
@@ -231,17 +245,40 @@ public class MainMenu {
         }
     }
 
+    public void performCreateAccount() {
+        try {
+            String newAccountId = bank.createAccount();
+            System.out.println("New account created: " + newAccountId);
+            System.out.println("Use \"Choose another account\" to switch to it.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Could not create account: " + e.getMessage());
+        }
+    }
+
+    private String selectOrCreateAccountId() {
+        String accountId = selectAccountId(null);
+        if (accountId != null) {
+            return accountId;
+        }
+        System.out.println("1. Open a new account");
+        System.out.println("2. Exit the app");
+        if (getUserSelection(2) == 1) {
+            return bank.createAccount();
+        }
+        return null;
+    }
+
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
         System.out.println("1. Client");
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
-        int exitSelection = isAdmin ? 3 : 8;
+        int exitSelection = isAdmin ? 3 : 9;
         int selection = -1;
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
-                selectedAccountId = selectAccountId(null);
+                selectedAccountId = selectOrCreateAccountId();
                 if (selectedAccountId == null) {
                     return;
                 }

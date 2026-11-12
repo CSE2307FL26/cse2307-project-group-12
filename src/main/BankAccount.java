@@ -5,12 +5,24 @@ import java.util.List;
 
 public class BankAccount {
 
+    private String accountId;
     private double balance;
     private List<String> transactionHistory;
 
     public BankAccount() {
         this.balance = 0;
         this.transactionHistory = new ArrayList<>();
+    }
+
+    void assignAccountId(String accountId) {
+        if (accountId == null || accountId.isEmpty()) {
+            throw new IllegalArgumentException("Account ID cannot be empty.");
+        }
+
+        if (this.accountId != null && !this.accountId.equals(accountId)) {
+            throw new IllegalArgumentException("Account already has a different ID.");
+        }
+        this.accountId = accountId;
     }
 
     public void deposit(double amount) {
@@ -53,8 +65,10 @@ public class BankAccount {
             throw new IllegalArgumentException("Cannot transfer to the same account.");
         }
 
-        this.withdraw(amount, "Transfer out");
-        otherAccount.deposit(amount, "Transfer in");
+        String outgoing = otherAccount.accountId == null ? "Transfer out" : "Transfer to " + otherAccount.accountId;
+        String incoming = accountId == null ? "Transfer in" : "Transfer from " + accountId;
+        this.withdraw(amount, outgoing);
+        otherAccount.deposit(amount, incoming);
     }
 
     public void chargeFee(double amount) {
