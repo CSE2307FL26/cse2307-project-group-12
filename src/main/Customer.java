@@ -9,7 +9,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class Customer {
 
-    private String username;
+    private final String username;
     private byte[] passwordHash;
     private byte[] salt;
 
