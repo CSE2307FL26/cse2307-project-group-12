@@ -14,8 +14,8 @@ public class Customer {
     private byte[] salt;
 
     public Customer(String username, String password) {
-        if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty.");
+        if (username == null || username.trim().isEmpty() || username.contains(" ")) {
+            throw new IllegalArgumentException("Username cannot be empty or contain spaces.");
         }
 
         if (password == null || password.isEmpty()) {

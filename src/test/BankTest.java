@@ -145,7 +145,8 @@ public class BankTest {
 
         assertEquals(100, bank.getAccount("12345").getBalance(), 0.01);
     }
-        @Test
+        
+    @Test
     public void testCreateAccountAddsAccountToBank() {
         Bank bank = new Bank();
 
@@ -202,5 +203,99 @@ public class BankTest {
 
         assertEquals("Transfer to " + destinationId + ": 40.00 | Balance: 60.00", source.getTransactionHistory().get(1));
         assertEquals("Transfer from " + sourceId + ": 40.00 | Balance: 40.00", destination.getTransactionHistory().get(0));
+    }
+
+    @Test
+    public void testRegisterCustomer() {
+        Bank bank = new Bank();
+
+        bank.registerCustomer("owen", "password123");
+
+        assertEquals("owen", bank.getCustomer("owen").getUsername());
+    }
+
+    @Test
+    public void testDuplicateUsernameNotAllowed() {
+        Bank bank = new Bank();
+        bank.registerCustomer("owen", "password123");
+
+        try {
+            bank.registerCustomer("owen", "password456");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testEmptyUsernameNotAllowed() {
+        Bank bank = new Bank();
+
+        try {
+            bank.registerCustomer("", "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testUsernameWithSpacesNotAllowed() {
+        Bank bank = new Bank();
+
+        try {
+            bank.registerCustomer("owen block", "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testEmptyPasswordNotAllowed() {
+        Bank bank = new Bank();
+
+        try {
+            bank.registerCustomer("owen", "");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testGetNonexistentCustomer() {
+        Bank bank = new Bank();
+
+        try {
+            bank.getCustomer("unknown");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testNullUsernameNotAllowed() {
+        Bank bank = new Bank();
+
+        try {
+            bank.registerCustomer(null, "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+    }
+
+    @Test
+    public void testNullPasswordNotAllowed() {
+        Bank bank = new Bank();
+
+        try {
+            bank.registerCustomer("owen", null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
     }
 }

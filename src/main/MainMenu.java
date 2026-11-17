@@ -268,26 +268,63 @@ public class MainMenu {
         return null;
     }
 
+    public void performRegistration() {
+        System.out.print("Enter a username: ");
+        String username = keyboardInput.next();
+
+        System.out.print("Enter a password: ");
+        String password = keyboardInput.next();
+
+        try {
+            bank.registerCustomer(username, password);
+            System.out.println("Registration successful!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Registration failed: " + e.getMessage());
+        }
+    }
+
+    
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
-        System.out.println("1. Customer");
-        System.out.println("2. Administrator");
-        this.isAdmin = getUserSelection(2) == 2;
 
+        int startingSelection = 0;
+
+        while (startingSelection != 4) {
+            System.out.println("1. Register as a new customer");
+            System.out.println("2. Continue as a customer");
+            System.out.println("3. Administrator");
+            System.out.println("4. Exit the app");
+
+            startingSelection = getUserSelection(4);
+
+            if (startingSelection == 1) {
+                performRegistration();
+            } else if (startingSelection == 2 || startingSelection == 3) {
+                this.isAdmin = startingSelection == 3;
+                runBankingMenu();
+            }
+        }
+    }
+
+    private void runBankingMenu() {
         int exitSelection = isAdmin ? 3 : 9;
         int selection = -1;
+
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
                 selectedAccountId = selectOrCreateAccountId();
+
                 if (selectedAccountId == null) {
                     return;
                 }
             }
+
             displayOptions();
             selection = getUserSelection(exitSelection);
             processInput(selection);
         }
     }
+
 
     public static void main(String[] args) {
         MainMenu bankApp = new MainMenu();
