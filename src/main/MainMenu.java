@@ -269,21 +269,44 @@ public class MainMenu {
     }
 
     public void performRegistration() {
-        System.out.print("Enter a username: ");
-        String username = keyboardInput.next();
+        // Clear the newline left by the menu selection.
+        keyboardInput.nextLine();
 
-        System.out.print("Enter a password: ");
-        String password = keyboardInput.next();
+        String username = "";
 
-        try {
-            bank.registerCustomer(username, password);
-            System.out.println("Registration successful!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Registration failed: " + e.getMessage());
+        while (username.isEmpty()) {
+            System.out.print("Enter a username: ");
+            String enteredUsername = keyboardInput.nextLine();
+
+            if (enteredUsername.trim().isEmpty()) {
+                System.out.println("Username cannot be empty.");
+            } else if (enteredUsername.contains(" ")) {
+                System.out.println("Username cannot contain spaces.");
+            } else {
+                try {
+                    bank.getCustomer(enteredUsername);
+                    System.out.println("Username already exists. Try another.");
+                } catch (IllegalArgumentException e) {
+                    username = enteredUsername;
+                }
+            }
         }
+
+        String password = "";
+
+        while (password.isEmpty()) {
+            System.out.print("Enter a password: ");
+            password = keyboardInput.nextLine();
+
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty.");
+            }
+        }
+
+        bank.registerCustomer(username, password);
+        System.out.println("Registration successful!");
     }
 
-    
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
 
