@@ -270,7 +270,7 @@ public class MainMenu {
 
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
-        System.out.println("1. Client");
+        System.out.println("1. Customer");
         System.out.println("2. Administrator");
         this.isAdmin = getUserSelection(2) == 2;
 
