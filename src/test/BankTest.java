@@ -2,6 +2,7 @@ package test;
 
 import main.BankAccount;
 import main.Bank;
+import main.Customer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -297,5 +298,106 @@ public class BankTest {
         } catch (IllegalArgumentException e) {
             // Expected exception
         }
+    }
+
+    @Test
+    public void testLoginReturnsCorrectCustomer() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+        bank.registerCustomer("customer2", "password456");
+        Customer expectedCustomer = bank.getCustomer("customer2");
+
+        Customer actualCustomer = bank.loginCustomer("customer2", "password456");
+
+        assertSame(expectedCustomer, actualCustomer);
+    }
+
+    @Test
+    public void testLoginRejectsIncorrectPassword() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer("customer1", "wrongPassword");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginRejectsUnknownUsername() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer("unknown", "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginRejectsEmptyUsername() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer("", "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginRejectsEmptyPassword() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer("customer1", "");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginRejectsNullUsername() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer(null, "password123");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginRejectsNullPassword() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "password123");
+
+        try {
+            bank.loginCustomer("customer1", null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception.
+        }
+    }
+
+    @Test
+    public void testLoginAcceptsPasswordWithSpaces() {
+        Bank bank = new Bank();
+        bank.registerCustomer("customer1", "my password 123");
+        Customer expectedCustomer = bank.getCustomer("customer1");
+
+        Customer actualCustomer = bank.loginCustomer("customer1", "my password 123");
+
+        assertSame(expectedCustomer, actualCustomer);
     }
 }
