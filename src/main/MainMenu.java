@@ -14,24 +14,21 @@ public class MainMenu {
 
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
-        ClientMenu clientMenu = new ClientMenu(bank, keyboardInput);
-        int startingSelection = 0;
-
-        while (startingSelection != 4) {
-            System.out.println("1. Register as a new customer");
-            System.out.println("2. Continue as a customer");
-            System.out.println("3. Administrator");
-            System.out.println("4. Exit the app");
-
-            startingSelection = Menu.getUserSelection(keyboardInput, 4);
-
-            if (startingSelection == 1) {
-                clientMenu.performRegistration();
-            } else if (startingSelection == 2) {
-                clientMenu.run();
+        while (true) {
+            System.out.println("1. Customer");
+            System.out.println("2. Administrator");
+            System.out.println("3. Exit the app");
+            int selection = Menu.getUserSelection(keyboardInput, 3);
+            if (selection == 3) {
                 return;
-            } else if (startingSelection == 3) {
-                new AdminMenu(bank, keyboardInput).run();
+            }
+            Menu menu;
+            if (selection == 1) {
+                menu = new ClientMenu(bank, keyboardInput);
+            } else {
+                menu = new AdminMenu(bank, keyboardInput);
+            }
+            if (menu.run() == Menu.MenuResult.EXIT) {
                 return;
             }
         }

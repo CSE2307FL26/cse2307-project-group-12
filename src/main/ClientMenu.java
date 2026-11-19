@@ -201,7 +201,24 @@ public class ClientMenu extends Menu {
     }
 
     @Override
-    public void run() {
+    public MenuResult run() {
+        int selection = 0;
+        while (selection != 3) {
+            System.out.println("1. Register");
+            System.out.println("2. Continue as a customer");
+            System.out.println("3. Back");
+            selection = getUserSelection(3);
+            if (selection == 1) {
+                performRegistration();
+            } else if (selection == 2) {
+                runBankingMenu();
+                return MenuResult.EXIT;
+            }
+        }
+        return MenuResult.BACK;
+    }
+
+    private void runBankingMenu() {
         int selection = -1;
         while (selection != 9) {
             if (selectedAccountId == null) {

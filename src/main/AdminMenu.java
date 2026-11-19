@@ -66,12 +66,13 @@ public class AdminMenu extends Menu {
     }
 
     @Override
-    public void run() {
+    public MenuResult run() {
         int selection = -1;
         while (selection != 3) {
             displayOptions();
             selection = getUserSelection(3);
             processInput(selection);
         }
+        return MenuResult.EXIT;
     }
 }

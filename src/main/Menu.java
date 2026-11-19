@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public abstract class Menu {
+    public enum MenuResult {
+        BACK,
+        EXIT
+    }
+
     
     protected final Bank bank;
     protected final Scanner keyboardInput;
@@ -13,7 +18,7 @@ public abstract class Menu {
         this.keyboardInput = keyboardInput;
     }
 
-    public abstract void run();
+    public abstract MenuResult run();
 
     protected int getUserSelection(int max) {
         return getUserSelection(keyboardInput, max);
