@@ -325,6 +325,7 @@ public class MainMenu {
             } else if (startingSelection == 2 || startingSelection == 3) {
                 this.isAdmin = startingSelection == 3;
                 runBankingMenu();
+                return;
             }
         }
     }
