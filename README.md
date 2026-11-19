@@ -50,3 +50,8 @@ All tests pass and we ran into no errors or unexpected behavior when interacting
 
 ## What commands are needed to compile and run your code from the command line?
 We would run 'bash runApp.sh' from the command line to compile and run our code. We included the Java compilation and execution commands within the runApp.sh file, so all we need to do is run it as a Bash script.
+
+
+
+## Requirements
+Java 22 or newer is needed to run the app because we use isTerminal() to check whether password input can be hidden.
