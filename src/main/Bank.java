@@ -84,6 +84,16 @@ public class Bank {
         customers.put(username, new Customer(username, password));
     }
 
+    public Customer loginCustomer(String username, String password) {
+        Customer customer = customers.get(username);
+
+        if (customer == null || !customer.checkPassword(password)) {
+            throw new IllegalArgumentException("Invalid username or password.");
+        }
+
+        return customer;
+    }
+
     public Customer getCustomer(String username) {
         Customer customer = customers.get(username);
 
