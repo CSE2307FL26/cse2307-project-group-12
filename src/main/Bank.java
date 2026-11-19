@@ -9,10 +9,12 @@ public class Bank {
 
     private Map<String, BankAccount> bankAccounts;
     private int nextAccountNumber;
+    private Map<String, Customer> customers;
 
     public Bank() {
         this.bankAccounts = new LinkedHashMap<>();
         this.nextAccountNumber = 1;
+        this.customers = new LinkedHashMap<>();
     }
 
     public void addAccount(String accountId, BankAccount account) {
@@ -64,4 +66,32 @@ public class Bank {
 
         bankAccounts.remove(accountId);
     }
+
+    
+    public void registerCustomer(String username, String password) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty.");
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty.");
+        }
+
+        if (customers.containsKey(username)) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
+
+        customers.put(username, new Customer(username, password));
+    }
+
+    public Customer getCustomer(String username) {
+        Customer customer = customers.get(username);
+
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found.");
+        }
+
+        return customer;
+    }
+
 }

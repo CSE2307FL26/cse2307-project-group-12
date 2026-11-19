@@ -268,26 +268,91 @@ public class MainMenu {
         return null;
     }
 
+    public void performRegistration() {
+        // Clear the newline left by the menu selection.
+        keyboardInput.nextLine();
+
+        String username = "";
+
+        while (username.isEmpty()) {
+            System.out.print("Enter a username: ");
+            String enteredUsername = keyboardInput.nextLine();
+
+            if (enteredUsername.trim().isEmpty()) {
+                System.out.println("Username cannot be empty.");
+            } else if (enteredUsername.contains(" ")) {
+                System.out.println("Username cannot contain spaces.");
+            } else {
+                try {
+                    bank.getCustomer(enteredUsername);
+                    System.out.println("Username already exists. Try another.");
+                } catch (IllegalArgumentException e) {
+                    username = enteredUsername;
+                }
+            }
+        }
+
+        String password = "";
+
+        while (password.isEmpty()) {
+            System.out.print("Enter a password: ");
+            if (System.console() != null && System.console().isTerminal()) {
+                password = new String(System.console().readPassword());
+            } else {
+                password = keyboardInput.nextLine();
+            }
+
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty.");
+            }
+        }
+
+        bank.registerCustomer(username, password);
+        System.out.println("Registration successful!");
+    }
+
     public void run() {
         System.out.println("Welcome to the 237 Bank App!");
-        System.out.println("1. Client");
-        System.out.println("2. Administrator");
-        this.isAdmin = getUserSelection(2) == 2;
 
+        int startingSelection = 0;
+
+        while (startingSelection != 4) {
+            System.out.println("1. Register as a new customer");
+            System.out.println("2. Continue as a customer");
+            System.out.println("3. Administrator");
+            System.out.println("4. Exit the app");
+
+            startingSelection = getUserSelection(4);
+
+            if (startingSelection == 1) {
+                performRegistration();
+            } else if (startingSelection == 2 || startingSelection == 3) {
+                this.isAdmin = startingSelection == 3;
+                runBankingMenu();
+                return;
+            }
+        }
+    }
+
+    private void runBankingMenu() {
         int exitSelection = isAdmin ? 3 : 9;
         int selection = -1;
+
         while (selection != exitSelection) {
             if (!isAdmin && selectedAccountId == null) {
                 selectedAccountId = selectOrCreateAccountId();
+
                 if (selectedAccountId == null) {
                     return;
                 }
             }
+
             displayOptions();
             selection = getUserSelection(exitSelection);
             processInput(selection);
         }
     }
+
 
     public static void main(String[] args) {
         MainMenu bankApp = new MainMenu();
