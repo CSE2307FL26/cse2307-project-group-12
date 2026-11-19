@@ -10,6 +10,49 @@ public class ClientMenu extends Menu {
         super(bank, keyboardInput);
     }
 
+    public void performRegistration() {
+        // Clear the newline left by the menu selection.
+        keyboardInput.nextLine();
+
+        String username = "";
+
+        while (username.isEmpty()) {
+            System.out.print("Enter a username: ");
+            String enteredUsername = keyboardInput.nextLine();
+
+            if (enteredUsername.trim().isEmpty()) {
+                System.out.println("Username cannot be empty.");
+            } else if (enteredUsername.contains(" ")) {
+                System.out.println("Username cannot contain spaces.");
+            } else {
+                try {
+                    bank.getCustomer(enteredUsername);
+                    System.out.println("Username already exists. Try another.");
+                } catch (IllegalArgumentException e) {
+                    username = enteredUsername;
+                }
+            }
+        }
+
+        String password = "";
+
+        while (password.isEmpty()) {
+            System.out.print("Enter a password: ");
+            if (System.console() != null && System.console().isTerminal()) {
+                password = new String(System.console().readPassword());
+            } else {
+                password = keyboardInput.nextLine();
+            }
+
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty.");
+            }
+        }
+
+        bank.registerCustomer(username, password);
+        System.out.println("Registration successful!");
+    }
+
     public void displayOptions() {
         System.out.println("Account: " + selectedAccountId);
         System.out.println("1. Make a deposit");
