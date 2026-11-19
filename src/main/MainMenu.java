@@ -296,7 +296,11 @@ public class MainMenu {
 
         while (password.isEmpty()) {
             System.out.print("Enter a password: ");
-            password = keyboardInput.nextLine();
+            if (System.console() != null && System.console().isTerminal()) {
+                password = new String(System.console().readPassword());
+            } else {
+                password = keyboardInput.nextLine();
+            }
 
             if (password.isEmpty()) {
                 System.out.println("Password cannot be empty.");
