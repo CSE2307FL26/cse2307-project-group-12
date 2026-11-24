@@ -113,7 +113,10 @@ public class ClientMenu extends Menu {
                 performCreateAccount();
                 break;
             case 8:
-                selectedAccountId = null;
+                String accountId = selectAccountId(null);
+                if (accountId != null) {
+                    selectedAccountId = accountId;
+                }
                 break;
         }
     }
@@ -210,11 +213,8 @@ public class ClientMenu extends Menu {
         }
     }
 
-    private String selectOrCreateAccountId() {
-        String accountId = selectAccountId(null);
-        if (accountId != null) {
-            return accountId;
-        }
+    private String openAccountOrExit() {
+        System.out.println("There are no accounts available.");
         System.out.println("1. Open a new account");
         System.out.println("2. Exit the app");
         if (getUserSelection(2) == 1) {
@@ -237,8 +237,10 @@ public class ClientMenu extends Menu {
                     break;
                 case 2:
                     if (performLogin()) {
-                        runBankingMenu();
-                        return MenuResult.EXIT;
+                        if (runBankingMenu() == MenuResult.EXIT) {
+                            return MenuResult.EXIT;
+                        }
+                        loggedInCustomer = null;
                     }
                     break;
                 case 3:
@@ -249,18 +251,26 @@ public class ClientMenu extends Menu {
         }
     }
 
-    private void runBankingMenu() {
+    private MenuResult runBankingMenu() {
         int selection = -1;
         while (selection != 9) {
             if (selectedAccountId == null) {
-                selectedAccountId = selectOrCreateAccountId();
-                if (selectedAccountId == null) {
-                    return;
+                if (bank.getAccountIds().isEmpty()) {
+                    selectedAccountId = openAccountOrExit();
+                    if (selectedAccountId == null) {
+                        return MenuResult.EXIT;
+                    }
+                } else {
+                    selectedAccountId = selectAccountId(null);
+                    if (selectedAccountId == null) {
+                        return MenuResult.BACK;
+                    }
                 }
             }
             displayOptions();
             selection = getUserSelection(9);
             processInput(selection);
         }
+        return MenuResult.EXIT;
     }
 }

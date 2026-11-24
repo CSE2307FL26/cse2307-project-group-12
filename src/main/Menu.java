@@ -66,7 +66,12 @@ public abstract class Menu {
         for (int i = 0; i < accountIds.size(); i++) {
             System.out.println((i + 1) + ". " + accountIds.get(i));
         }
-        int choice = getUserSelection(accountIds.size());
+        int cancelOption = accountIds.size() + 1;
+        System.out.println(cancelOption + ". Cancel");
+        int choice = getUserSelection(cancelOption);
+        if (choice == cancelOption) {
+            return null;
+        }
         return accountIds.get(choice - 1);
     }
 }
