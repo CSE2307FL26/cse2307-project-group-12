@@ -60,8 +60,11 @@ public class ClientMenu extends Menu {
     public boolean performLogin() {
         loggedInCustomer = null;
         keyboardInput.nextLine();
-        System.out.print("Enter a username: ");
+        System.out.print("Enter a username (leave blank to cancel): ");
         String username = keyboardInput.nextLine();
+        if (username.isEmpty()) {
+            return false;
+        }
         String password = readPassword();
 
         try {
@@ -226,7 +229,8 @@ public class ClientMenu extends Menu {
             System.out.println("1. Register");
             System.out.println("2. Log in");
             System.out.println("3. Back");
-            int selection = getUserSelection(3);
+            System.out.println("4. Exit the app");
+            int selection = getUserSelection(4);
             switch (selection) {
                 case 1:
                     performRegistration();
@@ -239,6 +243,8 @@ public class ClientMenu extends Menu {
                     break;
                 case 3:
                     return MenuResult.BACK;
+                case 4:
+                    return MenuResult.EXIT;
             }
         }
     }
