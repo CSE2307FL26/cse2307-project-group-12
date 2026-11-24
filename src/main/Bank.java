@@ -1,3 +1,4 @@
+
 package main;
 
 import java.util.ArrayList;
@@ -43,6 +44,17 @@ public class Bank {
         return accountId;
     }
 
+    // Opens a new account and associates it with a registered customer.
+    public String createAccountForCustomer(String username) {
+        Customer customer = getCustomer(username);
+
+        String accountId = createAccount();
+
+        customer.addAccount(accountId);
+
+        return accountId;
+    }
+
     public BankAccount getAccount(String accountId) {
         BankAccount account = bankAccounts.get(accountId);
 
@@ -65,9 +77,12 @@ public class Bank {
         }
 
         bankAccounts.remove(accountId);
+
+        for (Customer customer : customers.values()) {
+            customer.removeAccount(accountId);
+        }
     }
 
-    
     public void registerCustomer(String username, String password) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty.");
@@ -93,5 +108,4 @@ public class Bank {
 
         return customer;
     }
-
 }
