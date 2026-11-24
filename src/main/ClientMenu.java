@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class ClientMenu extends Menu {
     private String selectedAccountId;
+    private Customer loggedInCustomer;
 
     public ClientMenu(Bank bank, Scanner keyboardInput) {
         super(bank, keyboardInput);
@@ -37,12 +38,7 @@ public class ClientMenu extends Menu {
         String password = "";
 
         while (password.isEmpty()) {
-            System.out.print("Enter a password: ");
-            if (System.console() != null && System.console().isTerminal()) {
-                password = new String(System.console().readPassword());
-            } else {
-                password = keyboardInput.nextLine();
-            }
+            password = readPassword();
 
             if (password.isEmpty()) {
                 System.out.println("Password cannot be empty.");
@@ -51,6 +47,33 @@ public class ClientMenu extends Menu {
 
         bank.registerCustomer(username, password);
         System.out.println("Registration successful!");
+    }
+
+    private String readPassword() {
+        System.out.print("Enter a password: ");
+        if (System.console() != null && System.console().isTerminal()) {
+            return new String(System.console().readPassword());
+        }
+        return keyboardInput.nextLine();
+    }
+
+    public boolean performLogin() {
+        loggedInCustomer = null;
+        keyboardInput.nextLine();
+        System.out.print("Enter a username (leave blank to cancel): ");
+        String username = keyboardInput.nextLine();
+        if (username.isEmpty()) {
+            return false;
+        }
+        String password = readPassword();
+
+        try {
+            loggedInCustomer = bank.loginCustomer(username, password);
+            System.out.println("Login successful!");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return loggedInCustomer != null;
     }
 
     public void displayOptions() {
@@ -90,7 +113,10 @@ public class ClientMenu extends Menu {
                 performCreateAccount();
                 break;
             case 8:
-                selectedAccountId = null;
+                String accountId = selectAccountId(null);
+                if (accountId != null) {
+                    selectedAccountId = accountId;
+                }
                 break;
         }
     }
@@ -187,11 +213,8 @@ public class ClientMenu extends Menu {
         }
     }
 
-    private String selectOrCreateAccountId() {
-        String accountId = selectAccountId(null);
-        if (accountId != null) {
-            return accountId;
-        }
+    private String openAccountOrExit() {
+        System.out.println("There are no accounts available.");
         System.out.println("1. Open a new account");
         System.out.println("2. Exit the app");
         if (getUserSelection(2) == 1) {
@@ -202,34 +225,52 @@ public class ClientMenu extends Menu {
 
     @Override
     public MenuResult run() {
-        int selection = 0;
-        while (selection != 3) {
+        while (true) {
             System.out.println("1. Register");
-            System.out.println("2. Continue as a customer");
+            System.out.println("2. Log in");
             System.out.println("3. Back");
-            selection = getUserSelection(3);
-            if (selection == 1) {
-                performRegistration();
-            } else if (selection == 2) {
-                runBankingMenu();
-                return MenuResult.EXIT;
+            System.out.println("4. Exit the app");
+            int selection = getUserSelection(4);
+            switch (selection) {
+                case 1:
+                    performRegistration();
+                    break;
+                case 2:
+                    if (performLogin()) {
+                        if (runBankingMenu() == MenuResult.EXIT) {
+                            return MenuResult.EXIT;
+                        }
+                        loggedInCustomer = null;
+                    }
+                    break;
+                case 3:
+                    return MenuResult.BACK;
+                case 4:
+                    return MenuResult.EXIT;
             }
         }
-        return MenuResult.BACK;
     }
 
-    private void runBankingMenu() {
+    private MenuResult runBankingMenu() {
         int selection = -1;
         while (selection != 9) {
             if (selectedAccountId == null) {
-                selectedAccountId = selectOrCreateAccountId();
-                if (selectedAccountId == null) {
-                    return;
+                if (bank.getAccountIds().isEmpty()) {
+                    selectedAccountId = openAccountOrExit();
+                    if (selectedAccountId == null) {
+                        return MenuResult.EXIT;
+                    }
+                } else {
+                    selectedAccountId = selectAccountId(null);
+                    if (selectedAccountId == null) {
+                        return MenuResult.BACK;
+                    }
                 }
             }
             displayOptions();
             selection = getUserSelection(9);
             processInput(selection);
         }
+        return MenuResult.EXIT;
     }
 }
