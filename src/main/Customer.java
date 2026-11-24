@@ -4,12 +4,15 @@ package main;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class Customer {
 
     private final String username;
+    private final List<String> accountIds = new ArrayList<>();
     private byte[] passwordHash;
     private byte[] salt;
 
@@ -59,5 +62,25 @@ public class Customer {
             spec.clearPassword();
             Arrays.fill(characters, '\0');
         }
+    }
+
+    public void addAccount(String accountId) {
+        if (accountId == null || accountId.isEmpty()) {
+            throw new IllegalArgumentException("Account ID cannot be empty.");
+        }
+
+        if (accountIds.contains(accountId)) {
+            throw new IllegalArgumentException("Customer already owns this account.");
+        }
+
+        accountIds.add(accountId);
+    }
+
+    public void removeAccount(String accountId) {
+        accountIds.remove(accountId);
+    }
+
+    public List<String> getAccountIds() {
+        return new ArrayList<>(accountIds);
     }
 }

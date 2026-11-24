@@ -298,4 +298,59 @@ public class BankTest {
             // Expected exception
         }
     }
+
+    @Test
+    public void testCustomerCanOwnMultipleAccounts() {
+        Bank bank = new Bank();
+        bank.registerCustomer("owen", "password123");
+
+        String firstId = bank.createAccountForCustomer("owen");
+        String secondId = bank.createAccountForCustomer("owen");
+
+        assertNotEquals(firstId, secondId);
+        assertEquals(2, bank.getCustomer("owen").getAccountIds().size());
+        assertTrue(bank.getCustomer("owen").getAccountIds().contains(firstId));
+        assertTrue(bank.getCustomer("owen").getAccountIds().contains(secondId));
+    }
+
+    @Test
+    public void testDifferentCustomersHaveDifferentAccounts() {
+        Bank bank = new Bank();
+        bank.registerCustomer("owen", "password123");
+        bank.registerCustomer("harry", "password456");
+
+        String owenAccount = bank.createAccountForCustomer("owen");
+        String harryAccount = bank.createAccountForCustomer("harry");
+
+        assertTrue(bank.getCustomer("owen").getAccountIds().contains(owenAccount));
+        assertTrue(bank.getCustomer("harry").getAccountIds().contains(harryAccount));
+        assertTrue(!bank.getCustomer("owen").getAccountIds().contains(harryAccount));
+    }
+
+    @Test
+    public void testCannotCreateAccountForUnknownCustomer() {
+        Bank bank = new Bank();
+
+        try {
+            bank.createAccountForCustomer("unknown");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // Expected exception
+        }
+
+        assertEquals(0, bank.getAccountIds().size());
+    }
+
+    @Test
+    public void testClosingAccountRemovesItFromCustomer() {
+        Bank bank = new Bank();
+        bank.registerCustomer("owen", "password123");
+
+        String accountId = bank.createAccountForCustomer("owen");
+
+        bank.closeAccount(accountId);
+
+        assertTrue(!bank.getCustomer("owen").getAccountIds().contains(accountId));
+        assertTrue(!bank.getAccountIds().contains(accountId));
+    }
 }
